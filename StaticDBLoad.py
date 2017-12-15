@@ -3,6 +3,7 @@ import MySQLdb as MyDB
 import glob
 
 # Get the name of the most upto date reference file
+print("checkin / out working nicely")
 fpath = glob.glob('//192.168.1.3/trainDog/reference/*_ref_*.xml')
 print("File being used is: {}".format(fpath[0]))
 # setting up the parsing of the xml file
