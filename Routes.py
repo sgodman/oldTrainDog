@@ -90,5 +90,4 @@ sql2 = sql[:-1]
 number_of_rows = cursor.execute(sql)
 db.commit()
 print("{} Routes have been added to DB".format(number_of_rows))
-
 db.close()
