@@ -92,7 +92,6 @@ for child in root:
             sql2 += "'" + routeid + "'),"
 
             sql2 = sql2[:-1]
-            print("Route id: " + routeid + ".Stop sql looks like: {}".format(sql2))
             number_of_rows = cursor.execute(sql2)
             db.commit()
 print("Insert finished")
