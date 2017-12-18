@@ -28,12 +28,14 @@ print("Database tables purged")
 # below blocks read relevant data from the xml into correct tables in db
 
 # late reasons
-sql = "insert into Route VALUES "
-sql2 = "insert into Stops VALUES "
+
+
 
 for child in root:
     if child.tag == '{http://www.thalesgroup.com/rtti/XmlTimetable/v8}Journey':
         attribs = child.attrib
+        routeid = attribs.get('rid')
+        sql = "insert into Route VALUES "
         sql += "('" + attribs.get('rid') + "',"
         sql += "'" + attribs.get('uid') + "',"
         sql += "'" + attribs.get('trainId') + "',"
@@ -44,50 +46,54 @@ for child in root:
         else:
             sql = sql[:-1]
             sql += ",null),"
+        sql = sql[:-1]
+        number_of_rows = cursor.execute(sql)
+        db.commit()
 
         for child2 in child:
+            sql2 = "insert into Stops VALUES "
             attribs2 = child2.attrib
             sql2 += "('" + child2.tag + "',"
             if 'tpl' in attribs2:
                 sql2 += "'" + attribs2.get('tpl') + "',"
             else:
                 sql2 = sql2[:-1]
-                sql2 += ",null),"
+                sql2 += ",null,"
             if 'act' in attribs2:
                 sql2 += "'" + attribs2.get('act') + "',"
             else:
                 sql2 = sql2[:-1]
-                sql2 += ",null),"
+                sql2 += ",null,"
             if 'plat' in attribs2:
                 sql2 += "'" + attribs2.get('plat') + "',"
             else:
                 sql2 = sql2[:-1]
-                sql2 += ",null),"
+                sql2 += ",null,"
             if 'pta' in attribs2:
                 sql2 += "'" + attribs2.get('pta') + "',"
             else:
                 sql2 = sql2[:-1]
-                sql2 += ",null),"
+                sql2 += ",null,"
             if 'ptd' in attribs2:
                 sql2 += "'" + attribs2.get('ptd') + "',"
             else:
                 sql2 = sql2[:-1]
-                sql2 += ",null),"
+                sql2 += ",null,"
             if 'wta' in attribs2:
                 sql2 += "'" + attribs2.get('wta') + "',"
             else:
                sql2 = sql2[:-1]
-               sql2 += ",null),"
+               sql2 += ",null,"
             if 'wtd' in attribs2:
                 sql2 += "'" + attribs2.get('wtd') + "',"
             else:
                 sql2 = sql2[:-1]
-                sql2 += ",null),"
-            sql2 += "'" + attribs.get('rid') + "'),"
+                sql2 += ",null,"
+            sql2 += "'" + routeid + "'),"
 
-sql = sql[:-1]
-sql2 = sql[:-1]
-number_of_rows = cursor.execute(sql)
-db.commit()
-print("{} Routes have been added to DB".format(number_of_rows))
+            sql2 = sql2[:-1]
+            print("Route id: " + routeid + ".Stop sql looks like: {}".format(sql2))
+            number_of_rows = cursor.execute(sql2)
+            db.commit()
+print("Insert finished")
 db.close()
